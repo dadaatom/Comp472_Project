@@ -1,0 +1,3 @@
+https://scikit-learn.org/0.18/auto_examples/model_selection/plot_confusion_matrix.html
+https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html
+https://www.youtube.com/watch?v=VYGVOwlT4oE&list=PLZbbT5o_s2xrwRnXk_yCPtnqqo4_u2YGL&index=8
