@@ -41,8 +41,8 @@ def GetPhotos(directory):
             im = Image.open(f)
             new_im = normalize(im)
             folder = os.path.join(directory, dirName)
-            file = os.path.join(folder, filename)
-            new_im.save(file)        
+            file = os.path.join(folder, str(i))
+            new_im.save(folder)        
 
 
 def renameNoMask():
