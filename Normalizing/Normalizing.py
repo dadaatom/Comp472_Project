@@ -50,10 +50,6 @@ def renameNoMask():
     folder = 'noMask'
     directory = "C:\\Users\hayde\Documents\Test"
 
-
-    outputFolders = ["None","N95","Surgical","Cloth"] #MAKE THESE FOLDERS IN THE IMAGE PATH
-    counts = [0,0,0,0]
-
     list = os.listdir(directory)
 
     for i in range(0, len(list)):
