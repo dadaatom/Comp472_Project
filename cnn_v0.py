@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets
 
 num_epochs = 4
-num_classes = 10
+num_classes = 4
 learning_rate = 0.001
 
 transform = transforms.Compose(
