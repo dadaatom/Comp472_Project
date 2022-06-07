@@ -12,4 +12,4 @@ To create and evaluate a convolution neural networks ability to classify differe
 - Maxime Johnson (Compliance Specialist)
 - Visweshwaran Balasubramanian (Training Specialist)
 - Matthew Greco (Evaluation Specialist)
-- Hayden Ross (Training Specialist)
+- Hayden Ross (Data Specialist)
