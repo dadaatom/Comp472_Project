@@ -8,7 +8,7 @@ Our goal is to train a CNN with the ability to classify different types of masks
 - Matthew Greco (Evaluation Specialist)
 - Hayden Ross (Data Specialist)
 
-##File Descriptions:
+## File Descriptions:
 - <b>MaskDetection.ipynb:</b> Final combined jupyter notebook responsible for handling the preprocessing, training, and evaluation of our model.
 - <b>Dataset:</b> All of our organised by class into subfolders.
 
