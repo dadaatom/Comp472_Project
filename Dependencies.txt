@@ -1,0 +1,7 @@
+Tensorflow
+torch
+TorchVision
+sklearn
+matplotlib
+numpy
+split-folders
