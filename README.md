@@ -9,10 +9,21 @@ Our goal is to train a CNN with the ability to classify different types of masks
 - Hayden Ross (Data Specialist)
 
 ## File Descriptions:
-- <b>MaskDetection.ipynb:</b> Final combined jupyter notebook responsible for handling the preprocessing, training, and evaluation of our model.
+- <b>MaskDetection.ipynb:</b> Final combined jupyter notebook responsible for handling the preprocessing, training, and evaluation of our model. Saves the model to be imported.
+- <b>MaskModelEvaluation.ipynb:</b> Loads and evaluates the preformance of the loaded model.
 - <b>Dataset:</b> All of our images organised by class into subfolders.
 
+## Dependancies
+- Tensorflow
+- PyTorch
+- TorchVision
+- sklearn
+- itertools
+- matplotlib
+- numpy
+
+
 ## Execution
-1. Download `MaskDetection.ipynb` and the `Dataset`. Make sure that the `Dataset` is in the execution directory of `MaskDetection.ipynb`.
-2. Make sure the following libraries are installed: tensorflow, torch, torchvision, sklearn, itertools, matplotlib, and numpy.
-3. Run the notebook. Sections area labelled so you don't need to re-run the everything at each test / execution. Running on the GPU this step took approximately 3 minutes.
+1. Download `MaskDetection.ipynb`, `MaskModelEvaluation.ipynb`, `Dataset`.
+2. Make sure that the `Dataset` is in the execution directory of `MaskDetection.ipynb` and `MaskModelEvaluation.ipynb`.
+4. Run `MaskDetection.ipynb` or `MaskModelEvaluation.ipynb`.
