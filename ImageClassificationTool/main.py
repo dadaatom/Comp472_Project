@@ -2,7 +2,7 @@ from PIL import Image
 import os
 
 directory = "C:\\Users\hayde\Documents\School\Summer2022\Comp472\Project\Dataset\Medical+mask\Medical mask\Medical Mask\images"
-startingIndex = 3400 #CAN BE USED TO START AT A CERTAIN POSITION
+startingIndex = 3600 #CAN BE USED TO START AT A CERTAIN POSITION
 
 outputFolders = ["None","N95","Surgical","Cloth"] #MAKE THESE FOLDERS IN THE IMAGE PATH
 counts = [0,0,0,0]
