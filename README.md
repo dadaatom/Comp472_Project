@@ -10,7 +10,7 @@ Our goal is to train a CNN with the ability to classify different types of masks
 
 ## File Descriptions:
 - <b>MaskDetection.ipynb:</b> Final combined jupyter notebook responsible for handling the preprocessing, training, and evaluation of our model.
-- <b>Dataset:</b> All of our organised by class into subfolders.
+- <b>Dataset:</b> All of our images organised by class into subfolders.
 
 ## Execution
 1. Download `MaskDetection.ipynb` and the `Dataset`. Make sure that the `Dataset` is in the execution directory of `MaskDetection.ipynb`.
