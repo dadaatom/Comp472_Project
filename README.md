@@ -9,11 +9,14 @@ Our goal is to train a CNN with the ability to classify different types of masks
 - Hayden Ross (Data Specialist)
 
 ## File Descriptions:
-- <b>MaskDetection.ipynb:</b> Final combined jupyter notebook responsible for handling the preprocessing, training, and evaluation of our model. Saves the model to be imported.
-- <b>MaskModelEvaluation.ipynb:</b> Loads and evaluates the preformance of the loaded model.
-- <b>Dataset:</b> All of our images organised by class into subfolders.
+- <b>MaskDetection.py:</b> Final combined python code responsible for handling the preprocessing, training, and evaluation of our model. Saves the model to a file.
+- <b>MaskModelEvaluation.py:</b> Loads and evaluates the performance of the loaded model.
+- <b>Dataset:</b> All of our images organised by class into sub folders.
+- <b>Project_Report:</b> Report of project.
+- <b>runMe.bat:</b> Can help install all dependencies.
+- <b>Dependencies.txt:</b> List of all dependencies.
 
-## Dependancies
+## Dependencies
 - Tensorflow
 - PyTorch
 - TorchVision
@@ -21,9 +24,12 @@ Our goal is to train a CNN with the ability to classify different types of masks
 - itertools
 - matplotlib
 - numpy
+- splitfolders
 
 
 ## Execution
-1. Download `MaskDetection.ipynb`, `MaskModelEvaluation.ipynb`, `Dataset`.
-2. Make sure that the `Dataset` is in the execution directory of `MaskDetection.ipynb` and `MaskModelEvaluation.ipynb`.
-4. Run `MaskDetection.ipynb` or `MaskModelEvaluation.ipynb`.
+1. Install all dependencies using `runMe.bat` or independently.
+2. Download the trained model from [Google Drive](https://drive.google.com/file/d/1ZkLkTUAg9W-v1eFJbngc75jZty2lbV3N/view?usp=sharing)
+3. Download `MaskDetection.py`, `MaskModelEvaluation.py`, `Dataset`.
+4. Make sure that the `Dataset` is in the execution directory of `MaskDetection.py` and `MaskModelEvaluation.py`.
+5. Open `MaskDetection.py` or `MaskModelEvaluation.py` with Jupyter Notebook and run all cells.
