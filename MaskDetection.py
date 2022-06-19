@@ -36,6 +36,7 @@ imagePath = "Dataset"
 outputPath = "train_test_sets"
 
 trainDir = outputPath + "/train"
+valDir = outputPath + "/val"
 testDir = outputPath + "/test"
 
 classes = ["None", "N95", "Surgical", "Cloth"]  # Folders should be labeled the same as these classes.
@@ -43,6 +44,7 @@ classes = ["None", "N95", "Surgical", "Cloth"]  # Folders should be labeled the 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1, 0.1))
 
 train_batch_size = 32
+val_batch_size = 10
 test_batch_size = 100
 
 img_height = 128
@@ -54,6 +56,9 @@ transform = transforms.Compose([transforms.Resize((img_width, img_height)),
 
 train_ds = datasets.ImageFolder(trainDir, transform=transform)
 train_loader = torch.utils.data.DataLoader(train_ds, batch_size=train_batch_size, shuffle=True)
+
+val_ds = datasets.ImageFolder(valDir, transform=transform)
+val_loader = torch.utils.data.DataLoader(val_ds, batch_size=val_batch_size, shuffle=False)
 
 test_ds = datasets.ImageFolder(testDir, transform=transform)
 test_loader = torch.utils.data.DataLoader(test_ds, batch_size=test_batch_size, shuffle=False)
