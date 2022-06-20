@@ -13,7 +13,7 @@ Our goal is to train a CNN with the ability to classify different types of masks
 - <b>MaskModelEvaluation.py:</b> Loads and evaluates the performance of the loaded model.
 - <b>Dataset:</b> All of our images organised by class into sub folders.
 - <b>Project_Report:</b> Report of project.
-- <b>runMe.bat:</b> Can help install all dependencies.
+- <b>runMe.bat:</b> Run to install all dependencies within `Dependencies.txt`.
 - <b>Dependencies.txt:</b> List of all dependencies.
 
 ## Dependencies
