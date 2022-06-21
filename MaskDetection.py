@@ -46,9 +46,9 @@ classes = ["None", "N95", "Surgical", "Cloth"]  # Folders should be labeled the 
 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1, 0.1))
 
-train_batch_size = 32
-val_batch_size = 10
-test_batch_size = 100
+train_batch_size = 35
+val_batch_size = 15
+test_batch_size = 120
 
 img_height = 128
 img_width = 128
@@ -88,12 +88,16 @@ class CNN(nn.Module):
             nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
             nn.LeakyReLU(inplace=True),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(in_channels=64, out_channels=90, kernel_size=3, padding=1),
+            nn.BatchNorm2d(90),
+            nn.LeakyReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
 
         self.fc_layer = nn.Sequential(
             nn.Dropout(p=0.1),
-            nn.Linear(img_height * img_width * num_epochs, 1000),
+            nn.Linear(23040, 1000),
             nn.ReLU(inplace=True),
             nn.Linear(1000, 512),
             nn.ReLU(inplace=True),
