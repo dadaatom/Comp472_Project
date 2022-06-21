@@ -16,6 +16,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torch.nn.functional as fun
+
 
 
 # EVALUATION IMPORTS #
@@ -29,6 +31,7 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import KFold
 
 # ======================= PREDICTIONS ======================= #
 
@@ -72,7 +75,6 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv_layer = nn.Sequential(
-
             nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
             nn.BatchNorm2d(32),
             nn.LeakyReLU(inplace=True),
@@ -111,11 +113,8 @@ class CNN(nn.Module):
 
         return x
 
-model = CNN()
-
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-cuda: 0
+'''
+# OLD TRAINING
 
 total_step = len(train_loader)
 loss_list = []
@@ -140,8 +139,71 @@ for epoch in range(num_epochs):
         acc_list.append(correct / total)
 
         if (i + 1) % 100 == 0:
-            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'.format(epoch + 1, num_epochs, i + 1,
-                                                                                        total_step, loss.item(),                                                                              (correct / total) * 100))
+            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'.format(epoch + 1, num_epochs, i + 1, total_step, loss.item(), (correct / total) * 100))
+'''
+
+# ======================= TRAINING ======================= #
+
+def reset_weights(m):
+    if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+        m.reset_parameters()
+
+def train(fold, model, train_loader, optimizer, epoch):
+    model.train()
+    for batch_idx, (data, labels) in enumerate(train_loader):
+        #data, labels = data.to("cuda"), labels.to("cuda")
+        optimizer.zero_grad()
+        outputs = model(data)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        if batch_idx % 500 == 0:
+            print('Train Fold/Epoch: {}/{} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                fold,epoch, batch_idx * len(data), len(train_loader.dataset),
+                100. * batch_idx / len(train_loader), loss.item()))
+
+def test(fold, model, test_loader):
+    model.eval()
+    test_loss = 0
+    correct = 0
+    with torch.no_grad():
+        for data, target in test_loader:
+            #data, target = data.to("cuda"), target.to("cuda")
+            output = model(data)
+            test_loss += fun.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
+            pred = output.argmax(dim=1, keepdim=True) # get the index of the max log-probability
+            correct += pred.eq(target.view_as(pred)).sum().item()
+
+    test_loss /= len(test_loader.dataset)
+
+    print('\nTest set for fold {}: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(fold, test_loss, correct, len(test_loader.dataset), 100. * correct / len(test_loader.dataset)))
+
+
+def preformKFoldTraining(model, optimizer, numFolds = 10): # SOURCE: https://androidkt.com/pytorch-k-fold-cross-validation-using-dataloader-and-sklearn/
+    kfold = KFold(n_splits=numFolds, shuffle=True)
+
+    for fold,(train_idx,test_idx) in enumerate(kfold.split(train_ds)):
+
+      train_subsampler = torch.utils.data.SubsetRandomSampler(train_idx)
+      test_subsampler = torch.utils.data.SubsetRandomSampler(test_idx)
+
+      trainloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=train_subsampler)
+      testloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=test_subsampler)
+
+      model.apply(reset_weights)
+
+      for epoch in range(1, num_epochs + 1):
+        train(fold, model, trainloader, optimizer, epoch)
+        test(fold,model, testloader)
+
+
+model = CNN()
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+preformKFoldTraining(model, optimizer)
+
 torch.save(model.state_dict(), "TrainedModel_V2")
 # ======================= PREDICTIONS ======================= #
 
@@ -164,10 +226,7 @@ with torch.no_grad():
 
 # ======================= EVALUATION ======================= #
 
-def plot_confusion_matrix(cm, classes,
-                          normalize=False,
-                          title='Confusion matrix',
-                          cmap=plt.cm.Blues):
+def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
