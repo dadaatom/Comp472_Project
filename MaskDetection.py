@@ -180,6 +180,13 @@ def test(fold, model, test_loader):
 
     test_loss /= len(test_loader.dataset)
 
+    precision = round(precision_score(target, pred, average="weighted", zero_division=0), 2)
+    recall = round(recall_score(target, pred, average="weighted", zero_division=0), 2)
+    f1 = round(f1_score(target, pred, average="weighted", zero_division=0), 2)
+    accuracy = round(accuracy_score(target, pred), 2)
+
+    metrics.append([precision, recall, f1, accuracy])
+
     print('\nTest set for fold {}: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(fold, test_loss, correct, len(test_loader.dataset), 100. * correct / len(test_loader.dataset)))
 
 
@@ -188,27 +195,30 @@ def preformKFoldTraining(model, optimizer, numFolds = 10): # SOURCE: https://and
 
     for fold,(train_idx,test_idx) in enumerate(kfold.split(train_ds)):
 
-      train_subsampler = torch.utils.data.SubsetRandomSampler(train_idx)
-      test_subsampler = torch.utils.data.SubsetRandomSampler(test_idx)
+        train_subsampler = torch.utils.data.SubsetRandomSampler(train_idx)
+        test_subsampler = torch.utils.data.SubsetRandomSampler(test_idx)
 
-      trainloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=train_subsampler)
-      testloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=test_subsampler)
+        trainloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=train_subsampler)
+        testloader = torch.utils.data.DataLoader(train_ds, batch_size=32, sampler=test_subsampler)
 
-      model.apply(reset_weights)
+        model.apply(reset_weights)
 
-      for epoch in range(1, num_epochs + 1):
-        train(fold, model, trainloader, optimizer, epoch)
+        for epoch in range(1, num_epochs + 1):
+            train(fold, model, trainloader, optimizer, epoch)
+
         test(fold,model, testloader)
-
 
 model = CNN()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
+metrics = []
+
 preformKFoldTraining(model, optimizer)
 
 torch.save(model.state_dict(), "TrainedModel_V2")
+
 # ======================= PREDICTIONS ======================= #
 
 model.eval()
@@ -230,11 +240,19 @@ with torch.no_grad():
 
 # ======================= EVALUATION ======================= #
 
+print("\nCross Validation Metrics")
+i = 0
+for x in metrics:
+    print("KFold: " + str(i) + "[" + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + " " + str(x[3]) + "]")
+    i+=1
+print("\n")
+
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
     """
+
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
@@ -259,7 +277,6 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-
 
 confusion_matrix(y_true=y_true, y_pred=y_pred)
 cm_plot_labels = classes
