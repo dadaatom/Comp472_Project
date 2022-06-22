@@ -29,7 +29,7 @@ Our goal is to train a CNN with the ability to classify different types of masks
 
 ## Execution
 1. Install all dependencies using `runMe.bat` or independently.
-2. Download the trained model from [Google Drive](https://drive.google.com/file/d/1ZkLkTUAg9W-v1eFJbngc75jZty2lbV3N/view?usp=sharing)
+2. Download the trained model from [Google Drive](https://drive.google.com/file/d/1L27D-IVS6tbxKTNns-PcQKbUYX6L7JH7/view)
 3. Download `MaskDetection.py`, `MaskModelEvaluation.py`, `Dataset`.
 4. Make sure that the `Dataset` is in the execution directory of `MaskDetection.py` and `MaskModelEvaluation.py`.
 5. Open `MaskDetection.py` or `MaskModelEvaluation.py` with Jupyter Notebook and run all cells.

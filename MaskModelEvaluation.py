@@ -15,7 +15,6 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import itertools
 
-import sklearn
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import recall_score
@@ -24,61 +23,62 @@ from sklearn.metrics import accuracy_score
 
 # ===================== MODEL ===================== #
 
-num_epochs = 4
+img_width = 140
+img_height = 140
 test_batch_size = 120
 
-img_height = 140
-img_width = 140
+num_epochs = 4
+learning_rate = 0.0003
 
 class CNN(nn.Module):
-  def __init__(self):
-    super(CNN, self).__init__()
-    self.conv_layer = nn.Sequential(
+    def __init__(self):
+        super(CNN, self).__init__()
+        self.conv_layer = nn.Sequential(
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.LeakyReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(inplace=True),
+            nn.AvgPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(in_channels=64, out_channels=90, kernel_size=3, padding=1),
+            nn.BatchNorm2d(90),
+            nn.LeakyReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
 
-        nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
-        nn.BatchNorm2d(32),
-        nn.LeakyReLU(inplace=True),
-        nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
-        nn.BatchNorm2d(32),
-        nn.LeakyReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1),
-        nn.BatchNorm2d(64),
-        nn.LeakyReLU(inplace=True),
-        nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3, padding=1),
-        nn.BatchNorm2d(64),
-        nn.LeakyReLU(inplace=True),
-        nn.AvgPool2d(kernel_size=2, stride=2),
-        nn.Conv2d(in_channels=64, out_channels=90, kernel_size=3, padding=1),
-        nn.BatchNorm2d(90),
-        nn.LeakyReLU(inplace=True),
-        nn.MaxPool2d(kernel_size=2, stride=2),
-    )
+        self.fc_layer = nn.Sequential(
+            nn.Dropout(p=0.1),
+            nn.Linear(26010, 1000),
+            nn.ReLU(inplace=True),
+            nn.Linear(1000, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(p=0.1),
+            nn.Linear(512, 10)
+        )
 
-    self.fc_layer = nn.Sequential(
-        nn.Dropout(p=0.1),
-        nn.Linear(26010, 1000),
-        nn.ReLU(inplace=True),
-        nn.Linear(1000, 512),
-        nn.ReLU(inplace=True),
-        nn.Dropout(p=0.1),
-        nn.Linear(512, 10)
-    )
-  def forward(self, x):
-    # conv layers
-    x = self.conv_layer(x)
+    def forward(self, x):
+        # conv layers
+        x = self.conv_layer(x)
 
-    # flatten
-    x = x.view(x.size(0), -1)
+        # flatten
+        x = x.view(x.size(0), -1)
 
-    # fc layer
-    x = self.fc_layer(x)
+        # fc layer
+        x = self.fc_layer(x)
 
-    return x
+        return x
 
   # ===================== IMPORT DATASET / MODEL ===================== #
 
-modelDir = "TrainedModel_V1"
+modelDir = "TrainedModel_V2"
 imagePath = "Dataset"
 outputPath = "train_test_sets"
 testDir = outputPath+"/test"

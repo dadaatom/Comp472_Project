@@ -18,8 +18,6 @@ import torch.nn as nn
 import torchvision.transforms as transforms
 import torch.nn.functional as fun
 
-
-
 # EVALUATION IMPORTS #
 
 import matplotlib.pyplot as plt
@@ -42,7 +40,7 @@ trainDir = outputPath + "/train"
 valDir = outputPath + "/val"
 testDir = outputPath + "/test"
 
-classes = ["None", "N95", "Surgical", "Cloth"]  # Folders should be labeled the same as these classes.
+classes = ["Cloth", "N95", "None", "Surgical"]  # Folders should be labeled the same as these classes.
 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1, 0.1))
 
@@ -117,35 +115,6 @@ class CNN(nn.Module):
 
         return x
 
-'''
-# OLD TRAINING
-
-total_step = len(train_loader)
-loss_list = []
-acc_list = []
-for epoch in range(num_epochs):
-    for i, (images, labels) in enumerate(train_loader):
-        # for (images, labels) in zip(imagesList, labelsList):
-        # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-        loss_list.append(loss.item())
-
-        # Backprop and optimisation
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        # Train accuracy
-        total = labels.size(0)
-        _, predicted = torch.max(outputs.data, 1)
-        correct = (predicted == labels).sum().item()
-        acc_list.append(correct / total)
-
-        if (i + 1) % 100 == 0:
-            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'.format(epoch + 1, num_epochs, i + 1, total_step, loss.item(), (correct / total) * 100))
-'''
-
 # ======================= TRAINING ======================= #
 
 def reset_weights(m):
@@ -190,7 +159,7 @@ def test(fold, model, test_loader):
     print('\nTest set for fold {}: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(fold, test_loss, correct, len(test_loader.dataset), 100. * correct / len(test_loader.dataset)))
 
 
-def preformKFoldTraining(model, optimizer, numFolds = 10): # SOURCE: https://androidkt.com/pytorch-k-fold-cross-validation-using-dataloader-and-sklearn/
+def preformKFoldTraining(model, optimizer, numFolds = 10):
     kfold = KFold(n_splits=numFolds, shuffle=True)
 
     for fold,(train_idx,test_idx) in enumerate(kfold.split(train_ds)):
@@ -215,9 +184,30 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 metrics = []
 
-preformKFoldTraining(model, optimizer)
+#preformKFoldTraining(model, optimizer)
+total_step = len(train_loader)
+loss_list = []
+acc_list = []
+for epoch in range(num_epochs):
+    for i, (images, labels) in enumerate(train_loader):
+    #for (images, labels) in zip(imagesList, labelsList):
+      # Forward pass
+      outputs = model(images)
+      loss = criterion(outputs, labels)
+      loss_list.append(loss.item())
 
-torch.save(model.state_dict(), "TrainedModel_V2")
+      # Backprop and optimisation
+      optimizer.zero_grad()
+      loss.backward()
+      optimizer.step()
+
+      # Train accuracy
+      total = labels.size(0)
+      _, predicted = torch.max(outputs.data, 1)
+      correct = (predicted == labels).sum().item()
+      acc_list.append(correct / total)
+
+torch.save(model.state_dict(), "TrainedModel_V1")
 
 # ======================= PREDICTIONS ======================= #
 
@@ -243,7 +233,7 @@ with torch.no_grad():
 print("\nCross Validation Metrics")
 i = 0
 for x in metrics:
-    print("KFold: " + str(i) + "[" + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + " " + str(x[3]) + "]")
+    print("K-Fold: " + str(i) + " -> [" + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + " " + str(x[3]) + "]")
     i+=1
 print("\n")
 
