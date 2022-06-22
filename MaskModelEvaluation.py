@@ -76,14 +76,14 @@ class CNN(nn.Module):
 
     return x
 
-  # ===================== IMPORT DATASET / MODEL ===================== #
+# ===================== IMPORT DATASET / MODEL ===================== #
 
-modelDir = "TrainedModel_V1"
+modelDir = "TrainedModel_V2"
 imagePath = "Dataset"
 outputPath = "train_test_sets"
 testDir = outputPath+"/test"
 
-classes = ["None", "N95", "Surgical", "Cloth"]
+classes = ["Cloth", "N95", "None", "Surgical"]
 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1,.1))
 
