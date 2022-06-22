@@ -27,8 +27,8 @@ from sklearn.metrics import accuracy_score
 num_epochs = 4
 test_batch_size = 120
 
-img_height = 128
-img_width = 128
+img_height = 140
+img_width = 140
 
 class CNN(nn.Module):
   def __init__(self):
@@ -57,7 +57,7 @@ class CNN(nn.Module):
 
     self.fc_layer = nn.Sequential(
         nn.Dropout(p=0.1),
-        nn.Linear(23040, 1000),
+        nn.Linear(26010, 1000),
         nn.ReLU(inplace=True),
         nn.Linear(1000, 512),
         nn.ReLU(inplace=True),
@@ -76,14 +76,14 @@ class CNN(nn.Module):
 
     return x
 
-# ===================== IMPORT DATASET / MODEL ===================== #
+  # ===================== IMPORT DATASET / MODEL ===================== #
 
-modelDir = "TrainedModel_V2"
+modelDir = "TrainedModel_V1"
 imagePath = "Dataset"
 outputPath = "train_test_sets"
 testDir = outputPath+"/test"
 
-classes = ["Cloth", "N95", "None", "Surgical"]
+classes = ["None", "N95", "Surgical", "Cloth"]
 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1,.1))
 
@@ -164,4 +164,3 @@ print(f"precision: {precision: .2f}")
 print(f"recall: {recall: .2f}")
 print(f"f1: {f1: .2f}")
 print(f"accuracy: {accuracy: .2f}")
-

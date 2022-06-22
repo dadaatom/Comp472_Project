@@ -42,13 +42,13 @@ trainDir = outputPath + "/train"
 valDir = outputPath + "/val"
 testDir = outputPath + "/test"
 
-classes = ["Cloth", "N95", "None", "Surgical"]  # Folders should be labeled the same as these classes.
+classes = ["None", "N95", "Surgical", "Cloth"]  # Folders should be labeled the same as these classes.
 
 splitfolders.ratio(imagePath, output=outputPath, seed=0, ratio=(.8, 0.1, 0.1))
 
-train_batch_size = 50
+train_batch_size = 35
 val_batch_size = 15
-test_batch_size = 100
+test_batch_size = 120
 
 img_height = 140
 img_width = 140
@@ -116,6 +116,35 @@ class CNN(nn.Module):
         x = self.fc_layer(x)
 
         return x
+
+'''
+# OLD TRAINING
+
+total_step = len(train_loader)
+loss_list = []
+acc_list = []
+for epoch in range(num_epochs):
+    for i, (images, labels) in enumerate(train_loader):
+        # for (images, labels) in zip(imagesList, labelsList):
+        # Forward pass
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss_list.append(loss.item())
+
+        # Backprop and optimisation
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        # Train accuracy
+        total = labels.size(0)
+        _, predicted = torch.max(outputs.data, 1)
+        correct = (predicted == labels).sum().item()
+        acc_list.append(correct / total)
+
+        if (i + 1) % 100 == 0:
+            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Accuracy: {:.2f}%'.format(epoch + 1, num_epochs, i + 1, total_step, loss.item(), (correct / total) * 100))
+'''
 
 # ======================= TRAINING ======================= #
 
@@ -188,7 +217,7 @@ metrics = []
 
 preformKFoldTraining(model, optimizer)
 
-torch.save(model.state_dict(), "TrainedModel_V3")
+torch.save(model.state_dict(), "TrainedModel_V2")
 
 # ======================= PREDICTIONS ======================= #
 
@@ -214,7 +243,7 @@ with torch.no_grad():
 print("\nCross Validation Metrics")
 i = 0
 for x in metrics:
-    print("K: " + str(i) + " -> [" + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + " " + str(x[3]) + "]")
+    print("KFold: " + str(i) + "[" + str(x[0]) + " " + str(x[1]) + " " + str(x[2]) + " " + str(x[3]) + "]")
     i+=1
 print("\n")
 
