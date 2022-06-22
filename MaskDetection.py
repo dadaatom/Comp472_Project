@@ -68,7 +68,7 @@ test_loader = torch.utils.data.DataLoader(test_ds, batch_size=test_batch_size, s
 
 # ======================= MODEL ======================= #
 
-num_epochs = 1
+num_epochs = 4
 learning_rate = 0.0003
 
 class CNN(nn.Module):
